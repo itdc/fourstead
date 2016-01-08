@@ -1,0 +1,24 @@
+{
+    "name": "itdc/fourstead",
+    "description": "A virtual machine for web developers.",
+    "require": {
+        "php": ">=5.5.9",
+        "symfony/console": "~2.3|~3.0",
+        "symfony/process": "~2.3|~3.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Avtandil Kikabidze",
+            "email": "akalongman@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ITDC\\Fourstead\\": "src/"
+        }
+    },
+    "bin": [
+        "fourstead"
+    ]
+}

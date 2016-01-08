@@ -1,5 +1,8 @@
 class Fourstead
   def Fourstead.configure(config, settings)
+
+    #puts settings
+
     # Set The VM Provider
     ENV['VAGRANT_DEFAULT_PROVIDER'] = settings["provider"] ||= "virtualbox"
 
@@ -13,8 +16,12 @@ class Fourstead
     config.ssh.forward_agent = true
 
     # Configure The Box
-    config.vm.box = settings["box"] ||= "itdc/fourstead"
-    config.vm.box_version = settings["version"] ||= ">= 0.4.0"
+    config.vm.box = settings["box"] ||= "itdc/foursteadAA"
+
+    if settings.has_key?("version")
+        config.vm.box_version = settings["version"]
+    end
+
     config.vm.hostname = settings["hostname"] ||= "fourstead"
 
     # Configure A Private Network IP

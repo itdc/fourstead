@@ -3,6 +3,8 @@ ip: "192.168.10.10"
 memory: 2048
 cpus: 1
 provider: virtualbox
+version: 1.0.0
+#box: "file:/home/longman/Code/package.box"
 
 authorize: ~/.ssh/id_rsa.pub
 
@@ -14,11 +16,14 @@ folders:
       to: /home/vagrant/Code
 
 sites:
-    - map: fourstead.app
-      to: /home/vagrant/Code/cms/public_html
+    - map: test1.dev
+      to: /home/vagrant/Code/test1/public_html
+    - map: test2.dev
+      to: /home/vagrant/Code/test2/public_html
 
 databases:
-    - fourstead
+    - test1
+    - test2
 
 # blackfire:
 #     - id: foo

@@ -16,7 +16,9 @@ class Fourstead
     config.ssh.forward_agent = true
 
     # Configure The Box
-    config.vm.box = settings["box"] ||= "itdc/foursteadAA"
+    config.vm.box = settings["box"] ||= "itdc/fourstead"
+
+    #puts "Box: #{config.vm.box}"
 
     if settings.has_key?("version")
         config.vm.box_version = settings["version"]
@@ -152,6 +154,8 @@ class Fourstead
       end
 
       config.vm.provision "shell" do |s|
+        #puts "Serving #{type}"
+
         s.path = scriptDir + "/serve-#{type}.sh"
         s.args = [site["map"], site["to"], site["port"] ||= "80", site["ssl"] ||= "443"]
       end
@@ -194,7 +198,7 @@ class Fourstead
     if settings.has_key?("variables")
       settings["variables"].each do |var|
         config.vm.provision "shell" do |s|
-          s.inline = "echo \"\nenv[$1] = '$2'\" >> /etc/php/7.0/fpm/php-fpm.conf"
+          s.inline = "echo \"\nenv[$1] = '$2'\" >> /etc/php5/fpm/php-fpm.conf"
           s.args = [var["key"], var["value"]]
         end
 
@@ -205,7 +209,7 @@ class Fourstead
       end
 
       config.vm.provision "shell" do |s|
-        s.inline = "service php7.0-fpm restart"
+        s.inline = "service php5-fpm restart"
       end
     end
 

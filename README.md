@@ -64,7 +64,7 @@ You may install Fourstead by simply cloning the repository. Consider cloning the
 
     git clone https://github.com/itdc/fourstead.git Fourstead
 
-Once you have cloned the Fourstead repository, run the `bash init<span class="token punctuation">.</span>sh` command from the Fourstead directory to create the `Fourstead<span class="token punctuation">.</span>yaml` configuration file. The `Fourstead<span class="token punctuation">.</span>yaml` file will be placed in the `<span class="token operator">~</span><span class="token operator">/</span><span class="token punctuation">.</span>fourstead` hidden directory:
+Once you have cloned the Fourstead repository, run the `bash init.sh` command from the Fourstead directory to create the `Fourstead.yaml` configuration file. The `Fourstead.yaml` file will be placed in the `~/.fourstead` hidden directory:
 
     bash init.sh
 
@@ -72,13 +72,13 @@ Once you have cloned the Fourstead repository, run the `bash init<span class="to
 
 #### Setting Your Provider
 
-The `provider` key in your `<span class="token operator">~</span><span class="token operator">/</span><span class="token punctuation">.</span>fourstead<span class="token operator">/</span>Fourstead<span class="token punctuation">.</span>yaml` file indicates which Vagrant provider should be used: `virtualbox`, `vmware_fusion`, or `vmware_workstation`. You may set this to the provider you prefer:
+The `provider` key in your `~/.fourstead/Fourstead.yaml` file indicates which Vagrant provider should be used: `virtualbox`, `vmware_fusion`, or `vmware_workstation`. You may set this to the provider you prefer:
 
     provider: virtualbox
 
 #### Configuring Shared Folders
 
-The `folders` property of the `Fourstead<span class="token punctuation">.</span>yaml` file lists all of the folders you wish to share with your Fourstead environment. As files within these folders are changed, they will be kept in sync between your local machine and the Fourstead environment. You may configure as many shared folders as necessary:
+The `folders` property of the `Fourstead.yaml` file lists all of the folders you wish to share with your Fourstead environment. As files within these folders are changed, they will be kept in sync between your local machine and the Fourstead environment. You may configure as many shared folders as necessary:
 
     folders:
         - map: ~/Code
@@ -93,7 +93,7 @@ To enable [NFS](http://docs.vagrantup.com/v2/synced-folders/nfs.html), just add 
 
 #### Configuring Nginx Sites
 
-Not familiar with Nginx? No problem. The `sites` property allows you to easily map a "domain" to a folder on your Fourstead environment. A sample site configuration is included in the `Fourstead<span class="token punctuation">.</span>yaml` file. Again, you may add as many sites to your Fourstead environment as necessary. Fourstead can serve as a convenient, virtualized environment for every ITDCMS project you are working on:
+Not familiar with Nginx? No problem. The `sites` property allows you to easily map a "domain" to a folder on your Fourstead environment. A sample site configuration is included in the `Fourstead.yaml` file. Again, you may add as many sites to your Fourstead environment as necessary. Fourstead can serve as a convenient, virtualized environment for every ITDCMS project you are working on:
 
     sites:
         - map: fourstead.app
@@ -108,19 +108,19 @@ You can make any Fourstead site use [HHVM](http://hhvm.com) by setting the `hhvm
 
 #### The Hosts File
 
-You must add the "domains" for your Nginx sites to the `hosts` file on your machine. The `hosts` file will redirect requests for your Fourstead sites into your Fourstead machine. On Mac and Linux, this file is located at `<span class="token operator">/</span>etc<span class="token operator">/</span>hosts`. On Windows, it is located at `C<span class="token punctuation">:</span>\<span class="token package">Windows<span class="token punctuation">\</span>System32<span class="token punctuation">\</span>drivers<span class="token punctuation">\</span>etc<span class="token punctuation">\</span>hosts</span>`. The lines you add to this file will look like the following:
+You must add the "domains" for your Nginx sites to the `hosts` file on your machine. The `hosts` file will redirect requests for your Fourstead sites into your Fourstead machine. On Mac and Linux, this file is located at `/etc/hosts`. On Windows, it is located at `C:\Windows\System32\drivers\etc\hosts`. The lines you add to this file will look like the following:
 
     192.168.10.10  fourstead.app
 
-Make sure the IP address listed is the one set in your `<span class="token operator">~</span><span class="token operator">/</span><span class="token punctuation">.</span>fourstead<span class="token operator">/</span>Fourstead<span class="token punctuation">.</span>yaml` file. Once you have added the domain to your `hosts` file, you can access the site via your web browser:
+Make sure the IP address listed is the one set in your `~/.fourstead/Fourstead.yaml` file. Once you have added the domain to your `hosts` file, you can access the site via your web browser:
 
     http://fourstead.app
 
 ### Launching The Vagrant Box
 
-Once you have edited the `Fourstead<span class="token punctuation">.</span>yaml` to your liking, run the `vagrant up` command from your Fourstead directory. Vagrant will boot the virtual machine and automatically configure your shared folders and Nginx sites.
+Once you have edited the `Fourstead.yaml` to your liking, run the `vagrant up` command from your Fourstead directory. Vagrant will boot the virtual machine and automatically configure your shared folders and Nginx sites.
 
-To destroy the machine, you may use the `vagrant destroy <span class="token operator">--</span>force` command.
+To destroy the machine, you may use the `vagrant destroy --force` command.
 
 ### Per Project Installation
 
@@ -130,7 +130,7 @@ To install Fourstead directly into your project, require it using Composer:
 
     composer require itdc/fourstead --dev
 
-Once Fourstead has been installed, use the `make` command to generate the `Vagrantfile` and `Fourstead<span class="token punctuation">.</span>yaml` file in your project root. The `make` command will automatically configure the `sites` and `folders` directives in the `Fourstead<span class="token punctuation">.</span>yaml` file.
+Once Fourstead has been installed, use the `make` command to generate the `Vagrantfile` and `Fourstead.yaml` file in your project root. The `make` command will automatically configure the `sites` and `folders` directives in the `Fourstead.yaml` file.
 
 Mac / Linux:
 
@@ -140,7 +140,7 @@ Windows:
 
     vendor\bin\fourstead make
 
-Next, run the `vagrant up` command in your terminal and access your project at `http<span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>fourstead<span class="token punctuation">.</span>app` in your browser. Remember, you will still need to add an `<span class="token operator">/</span>etc<span class="token operator">/</span>hosts` file entry for `fourstead<span class="token punctuation">.</span>app` or the domain of your choice.
+Next, run the `vagrant up` command in your terminal and access your project at `http://fourstead.app` in your browser. Remember, you will still need to add an `/etc/hosts` file entry for `fourstead.app` or the domain of your choice.
 
 ## [Daily Usage](#daily-usage)
 
@@ -150,7 +150,7 @@ Sometimes you may want to `vagrant up` your Fourstead machine from anywhere on y
 
     alias fourstead='function __fourstead() { (cd ~/Fourstead && vagrant $*); unset -f __fourstead; }; __fourstead'
 
-Make sure to tweak the `<span class="token operator">~</span><span class="token operator">/</span>Fourstead` path in the alias to the location of your actual Fourstead installation. Once the alias is installed, you may run commands like `fourstead up` or `fourstead ssh` from anywhere on your system.
+Make sure to tweak the `~/Fourstead` path in the alias to the location of your actual Fourstead installation. Once the alias is installed, you may run commands like `fourstead up` or `fourstead ssh` from anywhere on your system.
 
 ### Connecting Via SSH
 
@@ -160,28 +160,28 @@ But, since you will probably need to SSH into your Fourstead machine frequently,
 
 ### Connecting To Databases
 
-A `fourstead` database is configured for both MySQL and Postgres out of the box. For even more convenience, ITDCMS's `<span class="token punctuation">.</span>env` file configures the framework to use this database out of the box.
+A `fourstead` database is configured for both MySQL and Postgres out of the box. For even more convenience, ITDCMS's `.env` file configures the framework to use this database out of the box.
 
-To connect to your MySQL or Postgres database from your host machine via Navicat or Sequel Pro, you should connect to `<span class="token number">127.0</span><span class="token punctuation">.</span><span class="token number">0.1</span>` and port `<span class="token number">33060</span>` (MySQL) or `<span class="token number">54320</span>` (Postgres). The username and password for both databases is `fourstead` / `secret`.
+To connect to your MySQL or Postgres database from your host machine via Navicat or Sequel Pro, you should connect to `127.0.0.1` and port `33060` (MySQL) or `54320` (Postgres). The username and password for both databases is `fourstead` / `secret`.
 
 > **Note:** You should only use these non-standard ports when connecting to the databases from your host machine. You will use the default 3306 and 5432 ports in your ITDCMS database configuration file since ITDCMS is running _within_ the virtual machine.
 
 ### Adding Additional Sites
 
-Once your Fourstead environment is provisioned and running, you may want to add additional Nginx sites for your ITDCMS applications. You can run as many ITDCMS installations as you wish on a single Fourstead environment. To add an additional site, simply add the site to your `<span class="token operator">~</span><span class="token operator">/</span><span class="token punctuation">.</span>fourstead<span class="token operator">/</span>Fourstead<span class="token punctuation">.</span>yaml` file and then run the `vagrant provision` terminal command from your Fourstead directory.
+Once your Fourstead environment is provisioned and running, you may want to add additional Nginx sites for your ITDCMS applications. You can run as many ITDCMS installations as you wish on a single Fourstead environment. To add an additional site, simply add the site to your `~/.fourstead/Fourstead.yaml` file and then run the `vagrant provision` terminal command from your Fourstead directory.
 
 ### Configuring Cron Schedules
 
-ITDCMS provides a convenient way to [schedule Cron jobs](/docs/5.2/scheduling) by scheduling a single `schedule<span class="token punctuation">:</span>run` Artisan command to be run every minute. The `schedule<span class="token punctuation">:</span>run` command will examine the job scheduled defined in your `App\<span class="token package">Console<span class="token punctuation">\</span>Kernel</span>` class to determine which jobs should be run.
+ITDCMS provides a convenient way to [schedule Cron jobs](/docs/5.2/scheduling) by scheduling a single `schedule:run` Artisan command to be run every minute. The `schedule:run` command will examine the job scheduled defined in your `App\Console\Kernel` class to determine which jobs should be run.
 
-If you would like the `schedule<span class="token punctuation">:</span>run` command to be run for a Fourstead site, you may set the `schedule` option to `<span class="token boolean">true</span>` when defining the site:
+If you would like the `schedule:run` command to be run for a Fourstead site, you may set the `schedule` option to `true` when defining the site:
 
     sites:
         - map: fourstead.app
           to: /home/vagrant/Code/ITDCMS/public
           schedule: true
 
-The Cron job for the site will be defined in the `<span class="token operator">/</span>etc<span class="token operator">/</span>cron<span class="token punctuation">.</span>d` folder of the virtual machine.
+The Cron job for the site will be defined in the `/etc/cron.d` folder of the virtual machine.
 
 ### Ports
 

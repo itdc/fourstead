@@ -20,7 +20,7 @@ ITDCMS strives to make the entire PHP development experience delightful, includi
 
 ITDCMS Fourstead is an official, pre-packaged Vagrant box that provides you a wonderful development environment without requiring you to install PHP, HHVM, a web server, and any other server software on your local machine. No more worrying about messing up your operating system! Vagrant boxes are completely disposable. If something goes wrong, you can destroy and re-create the box in minutes!
 
-Fourstead runs on any Windows, Mac, or Linux system, and includes the Nginx web server, PHP 7.0, MySQL, Postgres, Redis, Memcached, Node, and all of the other goodies you need to develop amazing ITDCMS applications.
+Fourstead runs on any Windows, Mac, or Linux system, and includes the Nginx web server, PHP 5.6, MySQL, Postgres, Redis, Memcached, Node, and all of the other goodies you need to develop amazing web applications.
 
 > **Note:** If you are using Windows, you may need to enable hardware virtualization (VT-x). It can usually be enabled via your BIOS.
 
@@ -29,7 +29,6 @@ Fourstead runs on any Windows, Mac, or Linux system, and includes the Nginx web 
 *   Ubuntu Server 14.04 LTS
 *   Git
 *   PHP 5.6
-[//]: #*   HHVM
 *   Nginx
 *   MySQL
 *   Sqlite3
@@ -38,7 +37,6 @@ Fourstead runs on any Windows, Mac, or Linux system, and includes the Nginx web 
 *   Node (With PM2, Bower, Grunt, and Gulp)
 *   Redis
 *   Memcached
-[//]: #*   Beanstalkd
 
 ## [Installation & Setup](#installation-and-setup)
 
@@ -96,13 +94,13 @@ To enable [NFS](http://docs.vagrantup.com/v2/synced-folders/nfs.html), just add 
 Not familiar with Nginx? No problem. The `sites` property allows you to easily map a "domain" to a folder on your Fourstead environment. A sample site configuration is included in the `Fourstead.yaml` file. Again, you may add as many sites to your Fourstead environment as necessary. Fourstead can serve as a convenient, virtualized environment for every ITDCMS project you are working on:
 
     sites:
-        - map: fourstead.app
+        - map: fourstead.dev
           to: /home/vagrant/Code/ITDCMS/public
 
-You can make any Fourstead site use [HHVM](http://hhvm.com) by setting the `hhvm` option to `<span class="token boolean">true</span>`:
+You can make any Fourstead site use [HHVM](http://hhvm.com) by setting the `hhvm` option to `true`:
 
     sites:
-        - map: fourstead.app
+        - map: fourstead.dev
           to: /home/vagrant/Code/ITDCMS/public
           hhvm: true
 
@@ -110,11 +108,11 @@ You can make any Fourstead site use [HHVM](http://hhvm.com) by setting the `hhvm
 
 You must add the "domains" for your Nginx sites to the `hosts` file on your machine. The `hosts` file will redirect requests for your Fourstead sites into your Fourstead machine. On Mac and Linux, this file is located at `/etc/hosts`. On Windows, it is located at `C:\Windows\System32\drivers\etc\hosts`. The lines you add to this file will look like the following:
 
-    192.168.10.10  fourstead.app
+    192.168.10.10  fourstead.dev
 
 Make sure the IP address listed is the one set in your `~/.fourstead/Fourstead.yaml` file. Once you have added the domain to your `hosts` file, you can access the site via your web browser:
 
-    http://fourstead.app
+    http://fourstead.dev
 
 ### Launching The Vagrant Box
 
@@ -140,7 +138,7 @@ Windows:
 
     vendor\bin\fourstead make
 
-Next, run the `vagrant up` command in your terminal and access your project at `http://fourstead.app` in your browser. Remember, you will still need to add an `/etc/hosts` file entry for `fourstead.app` or the domain of your choice.
+Next, run the `vagrant up` command in your terminal and access your project at `http://fourstead.dev` in your browser. Remember, you will still need to add an `/etc/hosts` file entry for `fourstead.dev` or the domain of your choice.
 
 ## [Daily Usage](#daily-usage)
 
@@ -172,12 +170,12 @@ Once your Fourstead environment is provisioned and running, you may want to add 
 
 ### Configuring Cron Schedules
 
-ITDCMS provides a convenient way to [schedule Cron jobs](/docs/5.2/scheduling) by scheduling a single `schedule:run` Artisan command to be run every minute. The `schedule:run` command will examine the job scheduled defined in your `App\Console\Kernel` class to determine which jobs should be run.
+ITDCMS provides a convenient way to schedule Cron jobs by scheduling a single `schedule:run` Artisan command to be run every minute. The `schedule:run` command will examine the job scheduled defined in your `ITDCMS\System\App\Console\Kernel` class to determine which jobs should be run.
 
 If you would like the `schedule:run` command to be run for a Fourstead site, you may set the `schedule` option to `true` when defining the site:
 
     sites:
-        - map: fourstead.app
+        - map: fourstead.dev
           to: /home/vagrant/Code/ITDCMS/public
           schedule: true
 

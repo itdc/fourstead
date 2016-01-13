@@ -26,10 +26,10 @@ Fourstead runs on any Windows, Mac, or Linux system, and includes the Nginx web 
 
 ### Included Software
 
-*   Ubuntu 14.04
+*   Ubuntu Server 14.04 LTS
 *   Git
-*   PHP 7.0
-*   HHVM
+*   PHP 5.6
+[//]: #*   HHVM
 *   Nginx
 *   MySQL
 *   Sqlite3
@@ -38,7 +38,7 @@ Fourstead runs on any Windows, Mac, or Linux system, and includes the Nginx web 
 *   Node (With PM2, Bower, Grunt, and Gulp)
 *   Redis
 *   Memcached
-*   Beanstalkd
+[//]: #*   Beanstalkd
 
 ## [Installation & Setup](#installation-and-setup)
 

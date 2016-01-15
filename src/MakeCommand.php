@@ -103,7 +103,7 @@ class MakeCommand extends Command
 
         $this->configurePaths();
 
-        $output->writeln('Fourstead Installed!');
+        $output->writeln('Fourstead Installed! You must add domain '.$this->defaultName.'.dev (ip: 192.168.10.10) to your hosts file.');
     }
 
     /**
@@ -125,6 +125,18 @@ class MakeCommand extends Command
         $yaml = str_replace(
             $this->defaultName.'"/fourstead/public_html', $this->defaultName.'/public_html"', $yaml
         );
+
+        // Fix domain
+        $yaml = str_replace(
+            'map: fourstead.dev', 'map: '.$this->defaultName.'.dev', $yaml
+        );
+
+        // Fix database name
+        $yaml = str_replace(
+            '- fourstead', '- '.$this->defaultName.'.dev', $yaml
+        );
+
+
 
         file_put_contents($this->basePath.'/Fourstead.yaml', $yaml);
     }

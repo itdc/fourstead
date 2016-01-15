@@ -123,7 +123,7 @@ class MakeCommand extends Command
 
         // Fix path to the public folder (sites: to:)
         $yaml = str_replace(
-            $this->defaultName.'"/cms/public', $this->defaultName.'/public"', $yaml
+            $this->defaultName.'"/fourstead/public_html', $this->defaultName.'/public_html"', $yaml
         );
 
         file_put_contents($this->basePath.'/Fourstead.yaml', $yaml);

@@ -3,7 +3,7 @@ ip: "192.168.10.10"
 memory: 2048
 cpus: 1
 provider: virtualbox
-version: >=1.0.0
+version: 1.0.0
 #box: "file:/home/longman/Code/package.box"
 
 authorize: ~/.ssh/id_rsa.pub

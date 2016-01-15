@@ -7,8 +7,8 @@ if (file_exists(__DIR__.'/vendor/autoload.php')) {
     require __DIR__.'/../../autoload.php';
 }
 
-$app = new Symfony\Component\Console\Application('ITDC Fourstead', '3.0.1');
+$app = new Symfony\Component\Console\Application('ITDC Fourstead', '1.0.0');
 
-$app->add(new ITDCMS\Fourstead\MakeCommand);
+$app->add(new ITDC\Fourstead\MakeCommand);
 
 $app->run();

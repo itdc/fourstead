@@ -133,7 +133,7 @@ class MakeCommand extends Command
 
         // Fix database name
         $yaml = str_replace(
-            '- fourstead', '- '.$this->defaultName.'.dev', $yaml
+            '- fourstead', '- '.$this->defaultName, $yaml
         );
 
 

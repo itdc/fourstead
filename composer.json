@@ -2,11 +2,15 @@
     "name": "itdc/fourstead",
     "description": "A virtual machine for web developers.",
     "require": {
-        "php": ">=5.5.9",
-        "symfony/console": "~2.3|~3.0",
-        "symfony/process": "~2.3|~3.0"
+        "php": ">=8.1",
+        "symfony/console": "^6.1",
+        "symfony/process": "^6.1"
+    },
+    "require-dev": {
+        "longman/php-code-style": "^9.0"
     },
     "license": "MIT",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Avtandil Kikabidze",
@@ -18,7 +22,16 @@
             "ITDC\\Fourstead\\": "src/"
         }
     },
+    "scripts": {
+        "phpcs": "vendor/bin/phpcs --standard=phpcs.xml -spn --encoding=utf-8 --report-width=150 --colors --parallel=16 src/",
+        "phpcbf": "vendor/bin/phpcbf --standard=phpcs.xml -spn --encoding=utf-8 --report-width=150 --colors --parallel=32 src/"
+    },
     "bin": [
         "fourstead"
-    ]
+    ],
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
 }

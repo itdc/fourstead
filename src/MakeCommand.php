@@ -1,11 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ITDC\Fourstead;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+
+use function basename;
+use function copy;
+use function file_exists;
+use function file_get_contents;
+use function file_put_contents;
+use function getcwd;
+use function preg_replace;
+use function str_replace;
+use function strtolower;
+use function trim;
+
+use const PHP_EOL;
 
 class MakeCommand extends Command
 {
@@ -31,6 +46,60 @@ class MakeCommand extends Command
     protected $defaultName;
 
     /**
+     * Execute the command.
+     *
+     * @param  \Symfony\Component\Console\Input\InputInterface  $input
+     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
+     * @return void
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        if (! file_exists($this->basePath . '/Vagrantfile')) {
+            copy(__DIR__ . '/stubs/LocalizedVagrantfile', $this->basePath . '/Vagrantfile');
+        }
+
+        if (! file_exists($this->basePath . '/Fourstead.yaml') && ! file_exists($this->basePath . '/Fourstead.yaml.example')) {
+            copy(__DIR__ . '/stubs/Fourstead.yaml', $this->basePath . '/Fourstead.yaml');
+
+            if ($input->getOption('name')) {
+                $this->updateName($input->getOption('name'));
+            }
+
+            if ($input->getOption('hostname')) {
+                $this->updateHostName($input->getOption('hostname'));
+            }
+
+            if ($input->getOption('ip')) {
+                $this->updateIpAddress($input->getOption('ip'));
+            }
+        } elseif (! file_exists($this->basePath . '/Fourstead.yaml')) {
+            copy($this->basePath . '/Fourstead.yaml.example', $this->basePath . '/Fourstead.yaml');
+        }
+
+        if ($input->getOption('after')) {
+            if (! file_exists($this->basePath . '/after.sh')) {
+                copy(__DIR__ . '/stubs/after.sh', $this->basePath . '/after.sh');
+            }
+        }
+
+        if ($input->getOption('aliases')) {
+            if (! file_exists($this->basePath . '/aliases')) {
+                copy(__DIR__ . '/stubs/aliases', $this->basePath . '/aliases');
+            }
+        }
+
+        if ($input->getOption('example')) {
+            if (! file_exists($this->basePath . '/Fourstead.yaml.example')) {
+                copy($this->basePath . '/Fourstead.yaml', $this->basePath . '/Fourstead.yaml.example');
+            }
+        }
+
+        $this->configurePaths();
+
+        $output->writeln('Fourstead Installed! You must add domain ' . $this->defaultName . '.dev (ip: 192.168.10.10) to your hosts file.');
+    }
+
+    /**
      * Configure the command options.
      *
      * @return void
@@ -53,60 +122,6 @@ class MakeCommand extends Command
     }
 
     /**
-     * Execute the command.
-     *
-     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-     * @return void
-     */
-    public function execute(InputInterface $input, OutputInterface $output)
-    {
-        if (! file_exists($this->basePath.'/Vagrantfile')) {
-            copy(__DIR__.'/stubs/LocalizedVagrantfile', $this->basePath.'/Vagrantfile');
-        }
-
-        if (! file_exists($this->basePath.'/Fourstead.yaml') && ! file_exists($this->basePath.'/Fourstead.yaml.example')) {
-            copy(__DIR__.'/stubs/Fourstead.yaml', $this->basePath.'/Fourstead.yaml');
-
-            if ($input->getOption('name')) {
-                $this->updateName($input->getOption('name'));
-            }
-
-            if ($input->getOption('hostname')) {
-                $this->updateHostName($input->getOption('hostname'));
-            }
-
-            if ($input->getOption('ip')) {
-                $this->updateIpAddress($input->getOption('ip'));
-            }
-        } elseif (! file_exists($this->basePath.'/Fourstead.yaml')) {
-            copy($this->basePath.'/Fourstead.yaml.example', $this->basePath.'/Fourstead.yaml');
-        }
-
-        if ($input->getOption('after')) {
-            if (! file_exists($this->basePath.'/after.sh')) {
-                copy(__DIR__.'/stubs/after.sh', $this->basePath.'/after.sh');
-            }
-        }
-
-        if ($input->getOption('aliases')) {
-            if (! file_exists($this->basePath.'/aliases')) {
-                copy(__DIR__.'/stubs/aliases', $this->basePath.'/aliases');
-            }
-        }
-
-        if ($input->getOption('example')) {
-            if (! file_exists($this->basePath.'/Fourstead.yaml.example')) {
-                copy($this->basePath.'/Fourstead.yaml', $this->basePath.'/Fourstead.yaml.example');
-            }
-        }
-
-        $this->configurePaths();
-
-        $output->writeln('Fourstead Installed! You must add domain '.$this->defaultName.'.dev (ip: 192.168.10.10) to your hosts file.');
-    }
-
-    /**
      * Update paths in Fourstead.yaml.
      *
      * @return void
@@ -114,31 +129,41 @@ class MakeCommand extends Command
     protected function configurePaths()
     {
         $yaml = str_replace(
-            '- map: ~/Code', '- map: "'.str_replace('\\', '/', $this->basePath).'"', $this->getFoursteadFile()
+            '- map: ~/Code',
+            '- map: "' . str_replace('\\', '/', $this->basePath) . '"',
+            $this->getFoursteadFile(),
         );
 
         $yaml = str_replace(
-            'to: /home/vagrant/Code', 'to: "/home/vagrant/'.$this->defaultName.'"', $yaml
+            'to: /home/vagrant/Code',
+            'to: "/home/vagrant/' . $this->defaultName . '"',
+            $yaml,
         );
 
         // Fix path to the public folder (sites: to:)
         $yaml = str_replace(
-            $this->defaultName.'"/fourstead/public_html', $this->defaultName.'/public_html"', $yaml
+            $this->defaultName . '"/fourstead/public_html',
+            $this->defaultName . '/public_html"',
+            $yaml,
         );
 
         // Fix domain
         $yaml = str_replace(
-            'map: fourstead.dev', 'map: '.$this->defaultName.'.dev', $yaml
+            'map: fourstead.dev',
+            'map: ' . $this->defaultName . '.dev',
+            $yaml,
         );
 
         // Fix database name
         $yaml = str_replace(
-            '- fourstead', '- '.$this->defaultName, $yaml
+            '- fourstead',
+            '- ' . $this->defaultName,
+            $yaml,
         );
 
 
 
-        file_put_contents($this->basePath.'/Fourstead.yaml', $yaml);
+        file_put_contents($this->basePath . '/Fourstead.yaml', $yaml);
     }
 
     /**
@@ -151,8 +176,10 @@ class MakeCommand extends Command
      */
     protected function updateName($name)
     {
-        file_put_contents($this->basePath.'/Fourstead.yaml', str_replace(
-            'cpus: 1', 'cpus: 1'.PHP_EOL.'name: '.$name, $this->getFoursteadFile()
+        file_put_contents($this->basePath . '/Fourstead.yaml', str_replace(
+            'cpus: 1',
+            'cpus: 1' . PHP_EOL . 'name: ' . $name,
+            $this->getFoursteadFile(),
         ));
     }
 
@@ -164,8 +191,10 @@ class MakeCommand extends Command
      */
     protected function updateHostName($hostname)
     {
-        file_put_contents($this->basePath.'/Fourstead.yaml', str_replace(
-            'cpus: 1', 'cpus: 1'.PHP_EOL.'hostname: '.$hostname, $this->getFoursteadFile()
+        file_put_contents($this->basePath . '/Fourstead.yaml', str_replace(
+            'cpus: 1',
+            'cpus: 1' . PHP_EOL . 'hostname: ' . $hostname,
+            $this->getFoursteadFile(),
         ));
     }
 
@@ -177,8 +206,10 @@ class MakeCommand extends Command
      */
     protected function updateIpAddress($ip)
     {
-        file_put_contents($this->basePath.'/Fourstead.yaml', str_replace(
-            'ip: "192.168.10.10"', 'ip: "'.$ip.'"', $this->getFoursteadFile()
+        file_put_contents($this->basePath . '/Fourstead.yaml', str_replace(
+            'ip: "192.168.10.10"',
+            'ip: "' . $ip . '"',
+            $this->getFoursteadFile(),
         ));
     }
 
@@ -189,6 +220,6 @@ class MakeCommand extends Command
      */
     protected function getFoursteadFile()
     {
-        return file_get_contents($this->basePath.'/Fourstead.yaml');
+        return file_get_contents($this->basePath . '/Fourstead.yaml');
     }
 }
